@@ -1,5 +1,14 @@
 .streamlit/secrets.toml
 
+# Meeting-to-code pipeline: credentials and locally-stored pipeline data
+.env
+service-account*.json
+data/transcripts/*.txt
+data/requirements/*.json
+data/blueprints/*.md
+data/processed.json
+logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

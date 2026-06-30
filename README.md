@@ -15,6 +15,25 @@ Google Meet (transcript)
 A human approves the blueprint in Notion before tickets or code are
 generated — nothing downstream of Stage 3 runs automatically.
 
+## Two ways to run it
+
+**1. One-click, interactive (easiest — recommended).** In Claude Code, just name
+the meeting:
+
+```
+/meeting-to-code Q3 Planning
+```
+
+Claude finds the transcript, **confirms it with you**, then walks each stage —
+extract → blueprint (written to Notion) → your approval → GitHub issues → code
+PRs — pausing for your OK at every checkpoint. It uses your connected
+**GitHub** and **Notion** logins, so there are no tokens to manage. The command
+lives in `.claude/commands/meeting-to-code.md`.
+
+**2. Automated background pipeline.** The Python package below runs the same
+stages unattended on a schedule (polls Google Drive, advances each transcript
+through a state machine). More setup, but fully hands-off. Details follow.
+
 ## Setup
 
 1. Install dependencies:

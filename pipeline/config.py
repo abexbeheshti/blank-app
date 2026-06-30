@@ -43,6 +43,10 @@ class Config:
     anthropic_api_key: str | None = field(
         default_factory=lambda: os.environ.get("ANTHROPIC_API_KEY")
     )
+    # "api" -> call the Anthropic API directly (needs ANTHROPIC_API_KEY, billed
+    # per token). "claude_code" -> drive the Claude Code CLI in headless mode,
+    # which authenticates with a Claude Pro/Max subscription (no API billing).
+    llm_backend: str = field(default_factory=lambda: os.environ.get("LLM_BACKEND", "api"))
     extraction_model: str = field(
         default_factory=lambda: os.environ.get("EXTRACTION_MODEL", DEFAULT_EXTRACTION_MODEL)
     )

@@ -5,8 +5,8 @@ import json
 import logging
 import re
 
-from pipeline.clients.claude_client import ClaudeClient
 from pipeline.clients.github_client import GitHubClient
+from pipeline.clients.llm import get_llm_client
 from pipeline.config import Config
 from pipeline.storage import Storage
 
@@ -45,7 +45,7 @@ def generate_code_for_ticket(
 ) -> dict:
     """Call Claude to produce file contents for a ticket. Pure function - does
     not touch GitHub, so it's easy to unit test / review output before pushing."""
-    client = ClaudeClient(config)
+    client = get_llm_client(config)
     criteria = "\n".join(f"- {c}" for c in ticket.get("acceptance_criteria", []))
 
     result = client.complete_json(

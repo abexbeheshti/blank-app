@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 
-from pipeline.clients.claude_client import ClaudeClient
+from pipeline.clients.llm import get_llm_client
 from pipeline.config import Config
 from pipeline.storage import Storage
 
@@ -47,7 +47,7 @@ Transcript:
 
 def extract_requirements(transcript_id: str, config: Config, storage: Storage) -> dict:
     transcript = storage.load_transcript(transcript_id)
-    client = ClaudeClient(config)
+    client = get_llm_client(config)
 
     requirements = client.complete_json(
         model=config.extraction_model,

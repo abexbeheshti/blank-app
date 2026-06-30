@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import logging
 
-from pipeline.clients.claude_client import ClaudeClient
+from pipeline.clients.llm import get_llm_client
 from pipeline.clients.notion_client import NotionClient
 from pipeline.config import Config
 from pipeline.storage import Storage
@@ -35,7 +35,7 @@ Return only the Markdown document.
 
 def generate_blueprint(transcript_id: str, config: Config, storage: Storage) -> str:
     requirements = storage.load_requirements(transcript_id)
-    client = ClaudeClient(config)
+    client = get_llm_client(config)
 
     markdown = client.complete(
         model=config.blueprint_model,

@@ -4,8 +4,8 @@ from __future__ import annotations
 import json
 import logging
 
-from pipeline.clients.claude_client import ClaudeClient
 from pipeline.clients.github_client import GitHubClient
+from pipeline.clients.llm import get_llm_client
 from pipeline.config import Config
 from pipeline.storage import Storage
 
@@ -42,7 +42,7 @@ Requirements context:
 def generate_tickets(transcript_id: str, config: Config, storage: Storage) -> list[dict]:
     blueprint = storage.load_blueprint(transcript_id)
     requirements = storage.load_requirements(transcript_id)
-    client = ClaudeClient(config)
+    client = get_llm_client(config)
 
     tickets = client.complete_json(
         model=config.ticket_model,

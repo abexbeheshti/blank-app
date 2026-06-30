@@ -1,1 +1,8 @@
 streamlit
+anthropic
+google-api-python-client
+google-auth
+notion-client
+PyGithub
+python-dotenv
+pytest

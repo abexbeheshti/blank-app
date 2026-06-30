@@ -17,7 +17,7 @@ VALID_RESPONSE = {
 
 
 def test_extract_requirements_saves_and_returns(tmp_path):
-    config = Config(anthropic_api_key="fake-key", data_dir=tmp_path)
+    config = Config(anthropic_api_key="fake-key", data_dir=tmp_path, llm_backend="api")
     storage = Storage(tmp_path)
     storage.save_transcript("t1", "some transcript text")
 
@@ -30,7 +30,7 @@ def test_extract_requirements_saves_and_returns(tmp_path):
 
 
 def test_extract_requirements_raises_on_missing_keys(tmp_path):
-    config = Config(anthropic_api_key="fake-key", data_dir=tmp_path)
+    config = Config(anthropic_api_key="fake-key", data_dir=tmp_path, llm_backend="api")
     storage = Storage(tmp_path)
     storage.save_transcript("t1", "some transcript text")
 

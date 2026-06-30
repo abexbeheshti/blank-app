@@ -27,26 +27,26 @@ generated — nothing downstream of Stage 3 runs automatically.
    account, Anthropic auth, Notion token, GitHub token). See
    `.env.example` for what each one is used for.
 
-### Choosing an LLM backend
+### LLM backend (uses your Claude subscription by default)
 
-The pipeline can talk to Claude two ways, switchable with `LLM_BACKEND`:
+By default (`LLM_BACKEND=claude_code`) the pipeline drives the **Claude Code
+CLI**, which runs on your Claude **Pro/Max subscription** — no separate API
+bill. One-time setup:
 
-- **`api`** (default) — calls the Anthropic API directly. Needs
-  `ANTHROPIC_API_KEY` and is billed per token.
-- **`claude_code`** — drives the Claude Code CLI in headless mode, which
-  authenticates with a Claude **Pro/Max subscription** (no separate API
-  bill). Set it up once:
+```
+claude setup-token                 # prints a long-lived OAuth token
+```
 
-  ```
-  claude setup-token                 # prints a long-lived OAuth token
-  export CLAUDE_CODE_OAUTH_TOKEN=... # put this in your .env
-  ```
+Put the token in `.env` as `CLAUDE_CODE_OAUTH_TOKEN=...` and leave
+`ANTHROPIC_API_KEY` **unset** (if it's set, Claude Code uses it and bills as
+API usage instead). That's it.
 
-  Then set `LLM_BACKEND=claude_code` and make sure `ANTHROPIC_API_KEY` is
-  **unset** — if it's set, Claude Code uses it and bills as API usage,
-  defeating the purpose. Note this path draws on your subscription's rate
-  limits (rolling multi-hour window + weekly cap) rather than pay-as-you-go,
-  so a heavy burst of meetings can throttle.
+This draws on your subscription's rate limits (rolling multi-hour window +
+weekly cap) rather than pay-as-you-go, so a heavy burst of meetings can
+throttle.
+
+Prefer pay-per-token instead? Set `LLM_BACKEND=api` and provide
+`ANTHROPIC_API_KEY`.
 
 ## Running
 

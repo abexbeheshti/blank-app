@@ -29,7 +29,22 @@
     font-family:var(--sans); font-size:16px; line-height:1.55;
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   }
-  .wrap { max-width:720px; margin:0 auto; padding:48px 22px 64px; }
+  .wrap { max-width:720px; margin:0 auto; padding:40px 22px 64px; }
+
+  /* language selector */
+  .topbar { display:flex; justify-content:flex-end; margin-bottom:22px; }
+  .lang-toggle {
+    display:inline-flex; gap:2px; background:var(--white);
+    border:1px solid var(--hairline); border-radius:var(--r-pill);
+    padding:3px; box-shadow:var(--shadow-soft);
+  }
+  .lang-btn {
+    font-family:var(--sans); font-weight:700; font-size:13px; letter-spacing:.02em;
+    color:var(--grey); background:none; border:none; cursor:pointer;
+    padding:7px 16px; border-radius:var(--r-pill); transition:background .15s, color .15s;
+  }
+  .lang-btn[aria-pressed="true"] { background:var(--forest); color:var(--white); }
+  .lang-btn:focus-visible { outline:2px solid var(--green); outline-offset:2px; }
 
   /* headings */
   h1 { font-family:var(--serif); color:var(--ink); line-height:1.14;
@@ -117,11 +132,12 @@
   /* ---- Mobile ---- */
   @media (max-width:600px) {
     body { font-size:15px; }
-    .wrap { padding:32px 16px 48px; }
+    .wrap { padding:28px 16px 48px; }
     h1 { font-size:24px; }
     .eyebrow { font-size:11px; }
     .lead { font-size:16px; }
     .intro { font-size:13.5px; padding:14px 16px; }
+    .lang-btn { font-size:12.5px; padding:6px 14px; }
     .search { font-size:15px; padding:12px 18px 12px 44px; }
     .count { font-size:12.5px; }
     .faq details { padding:2px 18px; border-radius:20px; }
@@ -142,401 +158,340 @@
 <body>
 <div class="wrap">
 
-  <header>
-    <p class="eyebrow">Client Information</p>
-    <h1>Cognitai Client FAQ</h1>
-    <p class="lead">Session transcription, clinical intelligence, and documentation support.</p>
-    <div class="intro">
-      This FAQ provides additional information about how Cognitai may be used by your mental
-      health professional. It supplements the Cognitai Informed Consent form and applicable
-      privacy notices.
+  <div class="topbar">
+    <div class="lang-toggle" role="group" aria-label="Language / Langue">
+      <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" class="lang-btn" data-lang="fr" aria-pressed="false">Français</button>
     </div>
+  </div>
+
+  <header>
+    <p class="eyebrow" id="faqEyebrow"></p>
+    <h1 id="faqTitle"></h1>
+    <p class="lead" id="faqLead"></p>
+    <div class="intro" id="faqIntro"></div>
   </header>
 
   <div class="search-wrap">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
     </svg>
-    <input type="text" class="search" id="faqSearch"
-           placeholder="Search — audio, consent, storage, minors…"
-           aria-label="Search the FAQ">
+    <input type="text" class="search" id="faqSearch">
   </div>
   <div class="count" id="faqCount" role="status" aria-live="polite"></div>
 
-  <div class="faq" id="faqList">
+  <div class="faq" id="faqList"></div>
 
-    <details>
-      <summary><span><span class="num">1.</span> What is Cognitai?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Cognitai is a clinical intelligence platform that supports you and your clinician throughout your care. It brings together information from your therapy sessions and anything you choose to share between sessions such as check-ins, journals, assigned activities, and optional sleep or activity data to help your clinician better understand your experiences over time. By organizing this information into clear, traceable insights and supporting session preparation and documentation, Cognitai helps your clinician to be even more present with you during sessions, spend less time rebuilding context or taking notes, and focus more fully on what matters to you. Your clinician remains fully responsible for every clinical decision, and Cognitai is designed to strengthen — not replace — the relationship between you and your clinician.</p>
-        <p>Cognitai does not provide therapy, diagnose conditions, prescribe treatment, give independent medical advice, or make clinical decisions. Your clinician remains responsible for your care.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">2.</span> Why might my clinician use Cognitai?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Your clinician may use Cognitai to:</p>
-        <ul>
-          <li>Remain even more present during your session.</li>
-          <li>Prepare draft clinical documentation.</li>
-          <li>Organize relevant information discussed during sessions.</li>
-          <li>Identify patterns, changes, themes, and possible associations for clinical review.</li>
-          <li>Maintain continuity across sessions.</li>
-          <li>Support more precise and personalized care.</li>
-        </ul>
-        <p>Cognitai supports your clinician's professional judgment rather than replacing it.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">3.</span> Does Cognitai automatically record my sessions?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p><strong>No. Session transcription does not begin automatically.</strong></p>
-        <p>Your clinician must intentionally start transcription. The clinician dashboard displays a clear indicator while transcription is active.</p>
-        <p>Your clinician can pause or stop transcription at any time, including during particularly sensitive parts of a session.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">4.</span> What happens to the session audio?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Session audio is processed only for the purpose of producing the transcript.</p>
-        <p>The audio is <strong>not retained</strong> as part of your clinical records. It is deleted from the transcription-processing infrastructure immediately after transcription is completed.</p>
-        <p>The written transcript may remain available within Cognitai, subject to your clinician's decisions and applicable retention requirements.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">5.</span> Where is the transcript stored?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>The transcript is stored only within Cognitai's secure infrastructure located in <strong>Quebec, Canada</strong>.</p>
-        <p>Identifiable client information stored by Cognitai is encrypted. Cognitai also applies additional layers of encryption to client content beyond the encryption provided by its underlying infrastructure.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">6.</span> Is Cognitai a clinical record system?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>No. Cognitai is a clinical intelligence platform rather than the clinician's official electronic health record or medical-record system.</p>
-        <p>Your clinician may copy or export relevant insights or notes from Cognitai into the clinic's official record system. Once information has been copied into another system, that copy is governed by the clinic's record-retention, privacy, and legal obligations.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">7.</span> Can the transcript be deleted?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Yes. Your clinician may keep or delete the transcript after the analysis and documentation have been completed, subject to applicable legal, regulatory, professional, and clinical-record requirements.</p>
-        <p>You may also request deletion through your clinician.</p>
-        <p>Deletion may not apply to information that:</p>
-        <ul>
-          <li>Has already been copied into the clinic's official record.</li>
-          <li>Must be retained under applicable healthcare or professional-record requirements.</li>
-          <li>Must be retained to satisfy a legal obligation.</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">8.</span> Where is identifiable client information stored?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Identifiable personal and health-related information held by Cognitai is encrypted and stored in <strong>Quebec, Canada</strong>.</p>
-        <p>Cognitai does not send directly identifiable client information to external processors or technology providers.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">9.</span> Can information be processed outside Canada?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Information that has first been de-identified may be processed inside or outside Canada to provide specific technical services.</p>
-        <p>Before external processing, identifying information is removed or separated so that the external technology provider does not receive directly identifiable client information.</p>
-        <p>External providers must be subject to appropriate privacy, security, confidentiality, and data-processing obligations. Where HIPAA applies, this includes a Business Associate Agreement when required.</p>
-        <p>External providers are prohibited from using any information for their own purposes or for any model training.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">10.</span> Who can access my information?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Readable client information is limited to:</p>
-        <ul>
-          <li>Your treating clinician.</li>
-          <li>Clinically authorized supervisors or other authorized clinical personnel where required for your care, supervision, or professional practice.</li>
-        </ul>
-        <p>Access is based on clinical role and authorization.</p>
-        <p><strong>Cognitai employees and contractors do NOT have any readable access</strong> to session transcripts, clinical content, or identifying client information.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">11.</span> Can Cognitai staff read my transcript?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Cognitai personnel do <strong>NOT</strong> have any access to readable client content.</p>
-        <p>Client content is encrypted, including through an additional Cognitai encryption layer. Cognitai's systems are designed so that staff cannot browse, search, or read client sessions.</p>
-        <p>Any exceptional access mechanism required for security, legal compliance, or technical recovery must be strictly controlled, authorized, and logged in accordance with Cognitai's security procedures.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">12.</span> Does Cognitai use other technology providers?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Cognitai may use carefully selected technology providers for limited functions such as infrastructure, secure processing, system reliability, and transcription.</p>
-        <p>These providers must:</p>
-        <ul>
-          <li>Process information only according to Cognitai's instructions.</li>
-          <li>Use the information only to provide the contracted service.</li>
-          <li>Maintain confidentiality and appropriate security safeguards.</li>
-          <li>Refrain from selling the information.</li>
-          <li>Refrain from using the information for advertising.</li>
-          <li>Refrain from using it to train or improve their own AI models.</li>
-          <li>Delete transient processing data according to Cognitai's instructions.</li>
-          <li>Enter into appropriate contractual privacy and security agreements, including a BAA where HIPAA requires one.</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">13.</span> Does Cognitai sell client data?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p><strong>No — and NEVER.</strong> Cognitai does NOT sell personal, clinical, or health-related information.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">14.</span> Is my information used to train AI models or improve Cognitai?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p><strong>NOT without your separate, explicit, and voluntary consent.</strong></p>
-        <p>Consent to session transcription and clinical documentation does not constitute consent to:</p>
-        <ul>
-          <li>AI-model training.</li>
-          <li>Product-development research using your client content.</li>
-          <li>Human review for model improvement.</li>
-          <li>Participation in a research study.</li>
-        </ul>
-        <p>Any use of client information for research, training, or product-improvement purposes requiring client data would require a separate consent and voluntary enrolment process.</p>
-        <p>Declining such participation will not affect access to care.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">15.</span> Does Cognitai do more than create a transcript?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Yes. Transcription is only one small part of Cognitai. By integrating Cognitai into your care, it can help:</p>
-        <ul>
-          <li>Give your clinician a clearer understanding of what happens between sessions</li>
-          <li>Bring together your check-ins, journals, assigned activities, session information, and optional sleep or activity data</li>
-          <li>Highlight meaningful changes and patterns over time</li>
-          <li>Help your clinician prepare for each session with better context</li>
-          <li>Reduce the time spent rebuilding context, taking notes, and completing documentation</li>
-          <li>Help your clinician be even more present and focused during your sessions</li>
-          <li>Support more personalized resources and follow-up between sessions</li>
-          <li>Strengthen continuity throughout your care</li>
-        </ul>
-        <p>Cognitai supports your clinician's professional judgment without replacing it. Your clinician remains fully responsible for every clinical decision.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">16.</span> How can I know why Cognitai surfaced an insight?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Cognitai is designed carefully and responsibly to make its clinical-support outputs traceable.</p>
-        <p>Analytical statements should be connected to supporting information, which may include:</p>
-        <ul>
-          <li>Relevant parts of the session.</li>
-          <li>Information you provided between sessions.</li>
-          <li>Your clinician's observations or notes.</li>
-          <li>Previous clinical context available to the clinician.</li>
-          <li>Other authorized information relevant to your care.</li>
-        </ul>
-        <p>Your clinician reviews the supporting information and decides whether an output is clinically meaningful.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">17.</span> Does Cognitai independently diagnose me or determine my treatment?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p><strong>NO.</strong></p>
-        <p>Cognitai does not:</p>
-        <ul>
-          <li>Diagnose mental health conditions.</li>
-          <li>Make automated treatment decisions.</li>
-          <li>Prescribe or change treatment.</li>
-          <li>Replace your clinician.</li>
-          <li>Independently determine what becomes part of your care plan.</li>
-        </ul>
-        <p>Cognitai may surface information for your clinician to consider. Your clinician remains responsible for evaluating that information and making all clinical decisions.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">18.</span> Are Cognitai's outputs reviewed by my clinician?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Yes. Your clinician is responsible for reviewing Cognitai-generated transcripts, documentation, summaries, insights, and other outputs before relying on them in your care.</p>
-        <p>An AI-generated output should not replace your clinician's professional judgment.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">19.</span> Will Cognitai automatically add information to my official clinical record?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>No. Cognitai is not the clinic's official record system.</p>
-        <p>Your clinician decides what information, if any, should be copied into the official clinical record. The clinician remains responsible for reviewing and approving that information.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">20.</span> Can my clinician share a session summary with me?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Yes. Cognitai may help prepare a client-friendly summary.</p>
-        <p>Your clinician decides whether sharing a summary is clinically appropriate, what it should contain, and when it should be provided.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">21.</span> Does the transcription identify me by my voice?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Cognitai does not use voice recognition to determine your identity.</p>
-        <p>For purposes of organizing the transcript, the system may distinguish between the person acting as the clinician and the person acting as the client. This is <strong>speaker-role labeling, not biometric identity recognition.</strong></p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">22.</span> Can I withdraw my consent?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Yes. You may withdraw consent for Cognitai to be used in future sessions at any time by informing your clinician.</p>
-        <p>Requesting access, correction, or deletion of information is subject to applicable laws and professional-record obligations.</p>
-        <p>Withdrawal of consent does not necessarily require deletion of information that:</p>
-        <ul>
-          <li>Was processed before consent was withdrawn.</li>
-          <li>Has become part of the clinic's official clinical record.</li>
-          <li>Must be retained under applicable law or professional standards.</li>
-        </ul>
-        <p>Your clinician can explain how future sessions will be documented after consent is withdrawn.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">23.</span> Who should I contact to access or delete my information?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>You may make a request through:</p>
-        <ul>
-          <li>Your treating clinician or clinic.</li>
-          <li>Cognitai's Privacy Office through your Cognitai Mobile App.</li>
-        </ul>
-        <p>When a request directly affects the clinical relationship or clinical record, Cognitai may inform or coordinate with your clinician.</p>
-        <p>Requests will be handled in accordance with applicable privacy, healthcare, professional, and record-retention requirements.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">24.</span> How long is information retained?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Cognitai retains information only for as long as necessary to provide your clinician with clinical intelligence services and meet applicable legal, regulatory, contractual, and professional obligations.</p>
-        <p>Because Cognitai is not the official clinical-record system, retention may also depend on decisions made by your clinician and the requirements that apply to the clinician's practice.</p>
-        <p>Your clinician may delete a transcript after the relevant analysis and documentation have been completed, unless retention is otherwise required.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">25.</span> What happens if I do not consent to Cognitai?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Using Cognitai is a mutual decision between you and your clinician.</p>
-        <p>You will continue to receive care if you do not consent to Cognitai. Your clinician will use an alternative process to take notes and prepare clinical documentation.</p>
-        <p>Cognitai is intended to help provide greater continuity, precision, and personalization, but it is not a condition for receiving mental healthcare.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">26.</span> Is Cognitai available for minors?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Cognitai is currently intended primarily for adults.</p>
-        <p>Any use involving a minor must follow the consent, authorization, parental or guardian involvement, privacy, and professional requirements applicable in the relevant jurisdiction.</p>
-        <p>The clinician or clinic is responsible for confirming that the necessary authorization has been obtained before using Cognitai with a minor.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">27.</span> Is Cognitai an emergency or crisis-monitoring service?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p><strong>NO. Cognitai is NOT an emergency service</strong> and does not continuously monitor sessions or client information for immediate crises.</p>
-        <p>Do <strong>NOT</strong> use Cognitai to request urgent help. In an emergency, contact emergency services or follow the emergency and crisis instructions provided by your clinician.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">28.</span> What happens if there is a privacy or security incident?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>Cognitai maintains procedures to investigate and respond to suspected privacy or security incidents.</p>
-        <p>Affected individuals, clinics, regulators, or other parties will be notified where notification is required by applicable law and according to our privacy policy.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span><span class="num">29.</span> Who can answer additional questions?</span><span class="sign">+</span></summary>
-      <div class="answer">
-        <p>You may ask your clinician questions before signing the consent form or at any point during your care.</p>
-        <div class="contact-card">
-          Questions concerning Cognitai's privacy and data practices may be directed to:<br><br>
-          <strong>Privacy Officer</strong><br>
-          Cognitai Health Inc.<br>
-          1250 Rue Guy, Suite 600<br>
-          Montréal, Quebec H3H 2L3<br>
-          Email: <a href="mailto:trust@cognitai.org">trust@cognitai.org</a>
-        </div>
-      </div>
-    </details>
-
-  </div>
-
-  <p class="footer">
-    This FAQ supplements the Cognitai Informed Consent form and applicable privacy notices.
-    It does not replace clinical advice from your treating clinician.
-  </p>
+  <p class="footer" id="faqFooter"></p>
 
 </div>
 
 <script>
   (function () {
-    var items = Array.prototype.slice.call(document.querySelectorAll('.faq details'));
-    var search = document.getElementById('faqSearch');
-    var count = document.getElementById('faqCount');
+    // ---- UI strings ----
+    var UI = {
+      en: {
+        eyebrow: 'Client Information',
+        title: 'Cognitai Client FAQ',
+        lead: 'Session transcription, clinical intelligence, and documentation support.',
+        intro: 'This FAQ provides additional information about how Cognitai may be used by your mental health professional. It supplements the Cognitai Informed Consent form and applicable privacy notices.',
+        searchPlaceholder: 'Search — audio, consent, storage, minors…',
+        searchAria: 'Search the FAQ',
+        footer: 'This FAQ supplements the Cognitai Informed Consent form and applicable privacy notices. It does not replace clinical advice from your treating clinician.',
+        results: function (n, term) { return 'Showing ' + n + ' result' + (n === 1 ? '' : 's') + ' for “' + term + '”.'; },
+        noResults: function (term) { return 'No results found for “' + term + '”. Try a different keyword.'; }
+      },
+      fr: {
+        eyebrow: 'Renseignements pour la clientèle',
+        title: 'FAQ pour la clientèle de Cognitai',
+        lead: 'Transcription des séances, intelligence clinique et soutien à la documentation.',
+        intro: 'Cette FAQ fournit des renseignements supplémentaires sur la façon dont Cognitai peut être utilisé par votre professionnel de la santé mentale. Elle complète le formulaire de consentement éclairé de Cognitai ainsi que les avis de confidentialité applicables.',
+        searchPlaceholder: 'Rechercher — audio, consentement, stockage, mineurs…',
+        searchAria: 'Rechercher dans la FAQ',
+        footer: 'Cette FAQ complète le formulaire de consentement éclairé de Cognitai ainsi que les avis de confidentialité applicables. Elle ne remplace pas les conseils cliniques de votre clinicien traitant.',
+        results: function (n, term) { return n + ' résultat' + (n === 1 ? '' : 's') + ' pour « ' + term + ' ».'; },
+        noResults: function (term) { return 'Aucun résultat pour « ' + term + ' ». Essayez un autre mot-clé.'; }
+      }
+    };
+
+    // ---- FAQ content (question + answer HTML, per language) ----
+    var FAQ = [
+      { num: 1,
+        q: { en: 'What is Cognitai?',
+             fr: 'Qu’est-ce que Cognitai ?' },
+        a: { en: '<p>Cognitai is a clinical intelligence platform that supports you and your clinician throughout your care. It brings together information from your therapy sessions and anything you choose to share between sessions such as check-ins, journals, assigned activities, and optional sleep or activity data to help your clinician better understand your experiences over time. By organizing this information into clear, traceable insights and supporting session preparation and documentation, Cognitai helps your clinician to be even more present with you during sessions, spend less time rebuilding context or taking notes, and focus more fully on what matters to you. Your clinician remains fully responsible for every clinical decision, and Cognitai is designed to strengthen — not replace — the relationship between you and your clinician.</p><p>Cognitai does not provide therapy, diagnose conditions, prescribe treatment, give independent medical advice, or make clinical decisions. Your clinician remains responsible for your care.</p>',
+             fr: '<p>Cognitai est une plateforme d’intelligence clinique qui vous soutient, vous et votre clinicien, tout au long de vos soins. Elle rassemble les renseignements provenant de vos séances de thérapie ainsi que tout ce que vous choisissez de partager entre les séances, comme des bilans, des journaux, des activités assignées et, de façon facultative, des données sur le sommeil ou l’activité, afin d’aider votre clinicien à mieux comprendre vos expériences au fil du temps. En organisant ces renseignements en observations claires et traçables et en soutenant la préparation des séances et la documentation, Cognitai aide votre clinicien à être encore plus présent avec vous pendant les séances, à consacrer moins de temps à reconstituer le contexte ou à prendre des notes, et à se concentrer davantage sur ce qui compte pour vous. Votre clinicien demeure entièrement responsable de chaque décision clinique, et Cognitai est conçu pour renforcer — et non remplacer — la relation entre vous et votre clinicien.</p><p>Cognitai ne fournit pas de thérapie, n’établit pas de diagnostic, ne prescrit pas de traitement, ne donne pas d’avis médical indépendant et ne prend pas de décisions cliniques. Votre clinicien demeure responsable de vos soins.</p>' } },
+
+      { num: 2,
+        q: { en: 'Why might my clinician use Cognitai?',
+             fr: 'Pourquoi mon clinicien pourrait-il utiliser Cognitai ?' },
+        a: { en: '<p>Your clinician may use Cognitai to:</p><ul><li>Remain even more present during your session.</li><li>Prepare draft clinical documentation.</li><li>Organize relevant information discussed during sessions.</li><li>Identify patterns, changes, themes, and possible associations for clinical review.</li><li>Maintain continuity across sessions.</li><li>Support more precise and personalized care.</li></ul><p>Cognitai supports your clinician’s professional judgment rather than replacing it.</p>',
+             fr: '<p>Votre clinicien peut utiliser Cognitai pour :</p><ul><li>Être encore plus présent pendant votre séance.</li><li>Préparer une ébauche de documentation clinique.</li><li>Organiser les renseignements pertinents abordés pendant les séances.</li><li>Repérer des tendances, des changements, des thèmes et des associations possibles à des fins d’examen clinique.</li><li>Maintenir la continuité d’une séance à l’autre.</li><li>Soutenir des soins plus précis et personnalisés.</li></ul><p>Cognitai soutient le jugement professionnel de votre clinicien plutôt que de le remplacer.</p>' } },
+
+      { num: 3,
+        q: { en: 'Does Cognitai automatically record my sessions?',
+             fr: 'Cognitai enregistre-t-il automatiquement mes séances ?' },
+        a: { en: '<p><strong>No. Session transcription does not begin automatically.</strong></p><p>Your clinician must intentionally start transcription. The clinician dashboard displays a clear indicator while transcription is active.</p><p>Your clinician can pause or stop transcription at any time, including during particularly sensitive parts of a session.</p>',
+             fr: '<p><strong>Non. La transcription des séances ne commence pas automatiquement.</strong></p><p>Votre clinicien doit intentionnellement démarrer la transcription. Le tableau de bord du clinicien affiche un indicateur clair lorsque la transcription est active.</p><p>Votre clinicien peut suspendre ou arrêter la transcription à tout moment, y compris pendant les parties particulièrement délicates d’une séance.</p>' } },
+
+      { num: 4,
+        q: { en: 'What happens to the session audio?',
+             fr: 'Qu’advient-il de l’audio de la séance ?' },
+        a: { en: '<p>Session audio is processed only for the purpose of producing the transcript.</p><p>The audio is <strong>not retained</strong> as part of your clinical records. It is deleted from the transcription-processing infrastructure immediately after transcription is completed.</p><p>The written transcript may remain available within Cognitai, subject to your clinician’s decisions and applicable retention requirements.</p>',
+             fr: '<p>L’audio de la séance est traité uniquement dans le but de produire la transcription.</p><p>L’audio n’est <strong>pas conservé</strong> dans vos dossiers cliniques. Il est supprimé de l’infrastructure de traitement de la transcription immédiatement après la fin de la transcription.</p><p>La transcription écrite peut demeurer disponible dans Cognitai, sous réserve des décisions de votre clinicien et des exigences de conservation applicables.</p>' } },
+
+      { num: 5,
+        q: { en: 'Where is the transcript stored?',
+             fr: 'Où la transcription est-elle stockée ?' },
+        a: { en: '<p>The transcript is stored only within Cognitai’s secure infrastructure located in <strong>Quebec, Canada</strong>.</p><p>Identifiable client information stored by Cognitai is encrypted. Cognitai also applies additional layers of encryption to client content beyond the encryption provided by its underlying infrastructure.</p>',
+             fr: '<p>La transcription est stockée uniquement au sein de l’infrastructure sécurisée de Cognitai située au <strong>Québec, Canada</strong>.</p><p>Les renseignements identifiables sur la clientèle stockés par Cognitai sont chiffrés. Cognitai applique également des couches de chiffrement supplémentaires au contenu client, au-delà du chiffrement fourni par son infrastructure sous-jacente.</p>' } },
+
+      { num: 6,
+        q: { en: 'Is Cognitai a clinical record system?',
+             fr: 'Cognitai est-il un système de dossier clinique ?' },
+        a: { en: '<p>No. Cognitai is a clinical intelligence platform rather than the clinician’s official electronic health record or medical-record system.</p><p>Your clinician may copy or export relevant insights or notes from Cognitai into the clinic’s official record system. Once information has been copied into another system, that copy is governed by the clinic’s record-retention, privacy, and legal obligations.</p>',
+             fr: '<p>Non. Cognitai est une plateforme d’intelligence clinique et non le dossier de santé électronique officiel ni le système de dossier médical du clinicien.</p><p>Votre clinicien peut copier ou exporter les observations ou notes pertinentes de Cognitai vers le système de dossier officiel de la clinique. Une fois qu’un renseignement a été copié dans un autre système, cette copie est régie par les obligations de conservation des dossiers, de confidentialité et les obligations légales de la clinique.</p>' } },
+
+      { num: 7,
+        q: { en: 'Can the transcript be deleted?',
+             fr: 'La transcription peut-elle être supprimée ?' },
+        a: { en: '<p>Yes. Your clinician may keep or delete the transcript after the analysis and documentation have been completed, subject to applicable legal, regulatory, professional, and clinical-record requirements.</p><p>You may also request deletion through your clinician.</p><p>Deletion may not apply to information that:</p><ul><li>Has already been copied into the clinic’s official record.</li><li>Must be retained under applicable healthcare or professional-record requirements.</li><li>Must be retained to satisfy a legal obligation.</li></ul>',
+             fr: '<p>Oui. Votre clinicien peut conserver ou supprimer la transcription une fois l’analyse et la documentation terminées, sous réserve des exigences légales, réglementaires, professionnelles et relatives aux dossiers cliniques applicables.</p><p>Vous pouvez également demander la suppression par l’intermédiaire de votre clinicien.</p><p>La suppression peut ne pas s’appliquer aux renseignements qui :</p><ul><li>Ont déjà été copiés dans le dossier officiel de la clinique.</li><li>Doivent être conservés en vertu des exigences applicables en matière de soins de santé ou de dossiers professionnels.</li><li>Doivent être conservés pour satisfaire à une obligation légale.</li></ul>' } },
+
+      { num: 8,
+        q: { en: 'Where is identifiable client information stored?',
+             fr: 'Où les renseignements identifiables sur la clientèle sont-ils stockés ?' },
+        a: { en: '<p>Identifiable personal and health-related information held by Cognitai is encrypted and stored in <strong>Quebec, Canada</strong>.</p><p>Cognitai does not send directly identifiable client information to external processors or technology providers.</p>',
+             fr: '<p>Les renseignements personnels et de santé identifiables détenus par Cognitai sont chiffrés et stockés au <strong>Québec, Canada</strong>.</p><p>Cognitai ne transmet pas de renseignements directement identifiables sur la clientèle à des sous-traitants externes ou à des fournisseurs de technologie.</p>' } },
+
+      { num: 9,
+        q: { en: 'Can information be processed outside Canada?',
+             fr: 'Les renseignements peuvent-ils être traités à l’extérieur du Canada ?' },
+        a: { en: '<p>Information that has first been de-identified may be processed inside or outside Canada to provide specific technical services.</p><p>Before external processing, identifying information is removed or separated so that the external technology provider does not receive directly identifiable client information.</p><p>External providers must be subject to appropriate privacy, security, confidentiality, and data-processing obligations. Where HIPAA applies, this includes a Business Associate Agreement when required.</p><p>External providers are prohibited from using any information for their own purposes or for any model training.</p>',
+             fr: '<p>Les renseignements qui ont d’abord été dépersonnalisés peuvent être traités au Canada ou à l’étranger afin de fournir des services techniques précis.</p><p>Avant tout traitement externe, les renseignements identifiants sont retirés ou séparés de sorte que le fournisseur de technologie externe ne reçoive pas de renseignements directement identifiables sur la clientèle.</p><p>Les fournisseurs externes doivent être assujettis à des obligations appropriées en matière de confidentialité, de sécurité, de protection des renseignements et de traitement des données. Lorsque la loi HIPAA s’applique, cela comprend un accord de partenariat commercial (Business Associate Agreement) lorsqu’il est requis.</p><p>Il est interdit aux fournisseurs externes d’utiliser tout renseignement à leurs propres fins ou pour l’entraînement de tout modèle.</p>' } },
+
+      { num: 10,
+        q: { en: 'Who can access my information?',
+             fr: 'Qui peut accéder à mes renseignements ?' },
+        a: { en: '<p>Readable client information is limited to:</p><ul><li>Your treating clinician.</li><li>Clinically authorized supervisors or other authorized clinical personnel where required for your care, supervision, or professional practice.</li></ul><p>Access is based on clinical role and authorization.</p><p><strong>Cognitai employees and contractors do NOT have any readable access</strong> to session transcripts, clinical content, or identifying client information.</p>',
+             fr: '<p>L’accès aux renseignements lisibles sur la clientèle est limité à :</p><ul><li>Votre clinicien traitant.</li><li>Les superviseurs cliniquement autorisés ou tout autre personnel clinique autorisé, lorsque cela est nécessaire pour vos soins, votre supervision ou la pratique professionnelle.</li></ul><p>L’accès repose sur le rôle clinique et l’autorisation.</p><p><strong>Les employés et les sous-traitants de Cognitai n’ont AUCUN accès en clair</strong> aux transcriptions de séances, au contenu clinique ni aux renseignements identifiants sur la clientèle.</p>' } },
+
+      { num: 11,
+        q: { en: 'Can Cognitai staff read my transcript?',
+             fr: 'Le personnel de Cognitai peut-il lire ma transcription ?' },
+        a: { en: '<p>Cognitai personnel do <strong>NOT</strong> have any access to readable client content.</p><p>Client content is encrypted, including through an additional Cognitai encryption layer. Cognitai’s systems are designed so that staff cannot browse, search, or read client sessions.</p><p>Any exceptional access mechanism required for security, legal compliance, or technical recovery must be strictly controlled, authorized, and logged in accordance with Cognitai’s security procedures.</p>',
+             fr: '<p>Le personnel de Cognitai n’a <strong>AUCUN</strong> accès au contenu client lisible.</p><p>Le contenu client est chiffré, notamment au moyen d’une couche de chiffrement Cognitai supplémentaire. Les systèmes de Cognitai sont conçus de manière que le personnel ne puisse pas parcourir, rechercher ni lire les séances des clients.</p><p>Tout mécanisme d’accès exceptionnel requis à des fins de sécurité, de conformité légale ou de récupération technique doit être strictement contrôlé, autorisé et journalisé conformément aux procédures de sécurité de Cognitai.</p>' } },
+
+      { num: 12,
+        q: { en: 'Does Cognitai use other technology providers?',
+             fr: 'Cognitai fait-il appel à d’autres fournisseurs de technologie ?' },
+        a: { en: '<p>Cognitai may use carefully selected technology providers for limited functions such as infrastructure, secure processing, system reliability, and transcription.</p><p>These providers must:</p><ul><li>Process information only according to Cognitai’s instructions.</li><li>Use the information only to provide the contracted service.</li><li>Maintain confidentiality and appropriate security safeguards.</li><li>Refrain from selling the information.</li><li>Refrain from using the information for advertising.</li><li>Refrain from using it to train or improve their own AI models.</li><li>Delete transient processing data according to Cognitai’s instructions.</li><li>Enter into appropriate contractual privacy and security agreements, including a BAA where HIPAA requires one.</li></ul>',
+             fr: '<p>Cognitai peut faire appel à des fournisseurs de technologie soigneusement sélectionnés pour des fonctions limitées telles que l’infrastructure, le traitement sécurisé, la fiabilité des systèmes et la transcription.</p><p>Ces fournisseurs doivent :</p><ul><li>Traiter les renseignements uniquement selon les instructions de Cognitai.</li><li>Utiliser les renseignements uniquement pour fournir le service convenu.</li><li>Maintenir la confidentialité et des mesures de sécurité appropriées.</li><li>S’abstenir de vendre les renseignements.</li><li>S’abstenir d’utiliser les renseignements à des fins publicitaires.</li><li>S’abstenir de les utiliser pour entraîner ou améliorer leurs propres modèles d’IA.</li><li>Supprimer les données de traitement transitoires selon les instructions de Cognitai.</li><li>Conclure des ententes contractuelles appropriées en matière de confidentialité et de sécurité, y compris un accord de partenariat commercial (BAA) lorsque la loi HIPAA l’exige.</li></ul>' } },
+
+      { num: 13,
+        q: { en: 'Does Cognitai sell client data?',
+             fr: 'Cognitai vend-il les données de la clientèle ?' },
+        a: { en: '<p><strong>No — and NEVER.</strong> Cognitai does NOT sell personal, clinical, or health-related information.</p>',
+             fr: '<p><strong>Non — et JAMAIS.</strong> Cognitai ne vend AUCUN renseignement personnel, clinique ou de santé.</p>' } },
+
+      { num: 14,
+        q: { en: 'Is my information used to train AI models or improve Cognitai?',
+             fr: 'Mes renseignements servent-ils à entraîner des modèles d’IA ou à améliorer Cognitai ?' },
+        a: { en: '<p><strong>NOT without your separate, explicit, and voluntary consent.</strong></p><p>Consent to session transcription and clinical documentation does not constitute consent to:</p><ul><li>AI-model training.</li><li>Product-development research using your client content.</li><li>Human review for model improvement.</li><li>Participation in a research study.</li></ul><p>Any use of client information for research, training, or product-improvement purposes requiring client data would require a separate consent and voluntary enrolment process.</p><p>Declining such participation will not affect access to care.</p>',
+             fr: '<p><strong>PAS sans votre consentement distinct, explicite et volontaire.</strong></p><p>Le consentement à la transcription des séances et à la documentation clinique ne constitue pas un consentement à :</p><ul><li>L’entraînement de modèles d’IA.</li><li>La recherche à des fins de développement de produit utilisant votre contenu client.</li><li>L’examen humain aux fins d’amélioration des modèles.</li><li>La participation à une étude de recherche.</li></ul><p>Toute utilisation des renseignements sur la clientèle à des fins de recherche, d’entraînement ou d’amélioration de produit nécessitant des données clients exigerait un processus distinct de consentement et d’inscription volontaire.</p><p>Le refus d’une telle participation n’aura aucune incidence sur l’accès aux soins.</p>' } },
+
+      { num: 15,
+        q: { en: 'Does Cognitai do more than create a transcript?',
+             fr: 'Cognitai fait-il plus que créer une transcription ?' },
+        a: { en: '<p>Yes. Transcription is only one small part of Cognitai. By integrating Cognitai into your care, it can help:</p><ul><li>Give your clinician a clearer understanding of what happens between sessions</li><li>Bring together your check-ins, journals, assigned activities, session information, and optional sleep or activity data</li><li>Highlight meaningful changes and patterns over time</li><li>Help your clinician prepare for each session with better context</li><li>Reduce the time spent rebuilding context, taking notes, and completing documentation</li><li>Help your clinician be even more present and focused during your sessions</li><li>Support more personalized resources and follow-up between sessions</li><li>Strengthen continuity throughout your care</li></ul><p>Cognitai supports your clinician’s professional judgment without replacing it. Your clinician remains fully responsible for every clinical decision.</p>',
+             fr: '<p>Oui. La transcription n’est qu’une petite partie de Cognitai. En intégrant Cognitai à vos soins, il peut aider à :</p><ul><li>Donner à votre clinicien une meilleure compréhension de ce qui se passe entre les séances</li><li>Rassembler vos bilans, journaux, activités assignées, renseignements de séance et, de façon facultative, vos données sur le sommeil ou l’activité</li><li>Mettre en évidence les changements et tendances significatifs au fil du temps</li><li>Aider votre clinicien à préparer chaque séance avec un meilleur contexte</li><li>Réduire le temps consacré à reconstituer le contexte, à prendre des notes et à remplir la documentation</li><li>Aider votre clinicien à être encore plus présent et concentré pendant vos séances</li><li>Soutenir des ressources et un suivi plus personnalisés entre les séances</li><li>Renforcer la continuité tout au long de vos soins</li></ul><p>Cognitai soutient le jugement professionnel de votre clinicien sans le remplacer. Votre clinicien demeure entièrement responsable de chaque décision clinique.</p>' } },
+
+      { num: 16,
+        q: { en: 'How can I know why Cognitai surfaced an insight?',
+             fr: 'Comment puis-je savoir pourquoi Cognitai a fait ressortir une observation ?' },
+        a: { en: '<p>Cognitai is designed carefully and responsibly to make its clinical-support outputs traceable.</p><p>Analytical statements should be connected to supporting information, which may include:</p><ul><li>Relevant parts of the session.</li><li>Information you provided between sessions.</li><li>Your clinician’s observations or notes.</li><li>Previous clinical context available to the clinician.</li><li>Other authorized information relevant to your care.</li></ul><p>Your clinician reviews the supporting information and decides whether an output is clinically meaningful.</p>',
+             fr: '<p>Cognitai est conçu de manière soignée et responsable afin de rendre ses résultats de soutien clinique traçables.</p><p>Les énoncés analytiques devraient être liés à des renseignements à l’appui, qui peuvent comprendre :</p><ul><li>Des parties pertinentes de la séance.</li><li>Les renseignements que vous avez fournis entre les séances.</li><li>Les observations ou notes de votre clinicien.</li><li>Le contexte clinique antérieur dont dispose le clinicien.</li><li>D’autres renseignements autorisés pertinents pour vos soins.</li></ul><p>Votre clinicien examine les renseignements à l’appui et décide si un résultat est cliniquement significatif.</p>' } },
+
+      { num: 17,
+        q: { en: 'Does Cognitai independently diagnose me or determine my treatment?',
+             fr: 'Cognitai établit-il un diagnostic ou détermine-t-il mon traitement de façon autonome ?' },
+        a: { en: '<p><strong>NO.</strong></p><p>Cognitai does not:</p><ul><li>Diagnose mental health conditions.</li><li>Make automated treatment decisions.</li><li>Prescribe or change treatment.</li><li>Replace your clinician.</li><li>Independently determine what becomes part of your care plan.</li></ul><p>Cognitai may surface information for your clinician to consider. Your clinician remains responsible for evaluating that information and making all clinical decisions.</p>',
+             fr: '<p><strong>NON.</strong></p><p>Cognitai ne fait pas ce qui suit :</p><ul><li>Diagnostiquer des troubles de santé mentale.</li><li>Prendre des décisions de traitement automatisées.</li><li>Prescrire ou modifier un traitement.</li><li>Remplacer votre clinicien.</li><li>Déterminer de façon autonome ce qui fait partie de votre plan de soins.</li></ul><p>Cognitai peut faire ressortir des renseignements que votre clinicien pourra prendre en considération. Votre clinicien demeure responsable d’évaluer ces renseignements et de prendre toutes les décisions cliniques.</p>' } },
+
+      { num: 18,
+        q: { en: 'Are Cognitai’s outputs reviewed by my clinician?',
+             fr: 'Les résultats de Cognitai sont-ils examinés par mon clinicien ?' },
+        a: { en: '<p>Yes. Your clinician is responsible for reviewing Cognitai-generated transcripts, documentation, summaries, insights, and other outputs before relying on them in your care.</p><p>An AI-generated output should not replace your clinician’s professional judgment.</p>',
+             fr: '<p>Oui. Votre clinicien est responsable d’examiner les transcriptions, la documentation, les résumés, les observations et les autres résultats générés par Cognitai avant de s’y fier dans le cadre de vos soins.</p><p>Un résultat généré par l’IA ne devrait pas remplacer le jugement professionnel de votre clinicien.</p>' } },
+
+      { num: 19,
+        q: { en: 'Will Cognitai automatically add information to my official clinical record?',
+             fr: 'Cognitai ajoutera-t-il automatiquement des renseignements à mon dossier clinique officiel ?' },
+        a: { en: '<p>No. Cognitai is not the clinic’s official record system.</p><p>Your clinician decides what information, if any, should be copied into the official clinical record. The clinician remains responsible for reviewing and approving that information.</p>',
+             fr: '<p>Non. Cognitai n’est pas le système de dossier officiel de la clinique.</p><p>Votre clinicien décide quels renseignements, le cas échéant, doivent être copiés dans le dossier clinique officiel. Le clinicien demeure responsable d’examiner et d’approuver ces renseignements.</p>' } },
+
+      { num: 20,
+        q: { en: 'Can my clinician share a session summary with me?',
+             fr: 'Mon clinicien peut-il partager un résumé de séance avec moi ?' },
+        a: { en: '<p>Yes. Cognitai may help prepare a client-friendly summary.</p><p>Your clinician decides whether sharing a summary is clinically appropriate, what it should contain, and when it should be provided.</p>',
+             fr: '<p>Oui. Cognitai peut aider à préparer un résumé convivial destiné au client.</p><p>Votre clinicien décide s’il est cliniquement approprié de partager un résumé, de ce qu’il devrait contenir et du moment où il devrait être remis.</p>' } },
+
+      { num: 21,
+        q: { en: 'Does the transcription identify me by my voice?',
+             fr: 'La transcription m’identifie-t-elle par ma voix ?' },
+        a: { en: '<p>Cognitai does not use voice recognition to determine your identity.</p><p>For purposes of organizing the transcript, the system may distinguish between the person acting as the clinician and the person acting as the client. This is <strong>speaker-role labeling, not biometric identity recognition.</strong></p>',
+             fr: '<p>Cognitai n’utilise pas la reconnaissance vocale pour déterminer votre identité.</p><p>Aux fins de l’organisation de la transcription, le système peut distinguer la personne agissant à titre de clinicien de la personne agissant à titre de client. Il s’agit d’un <strong>étiquetage du rôle du locuteur, et non d’une reconnaissance biométrique de l’identité.</strong></p>' } },
+
+      { num: 22,
+        q: { en: 'Can I withdraw my consent?',
+             fr: 'Puis-je retirer mon consentement ?' },
+        a: { en: '<p>Yes. You may withdraw consent for Cognitai to be used in future sessions at any time by informing your clinician.</p><p>Requesting access, correction, or deletion of information is subject to applicable laws and professional-record obligations.</p><p>Withdrawal of consent does not necessarily require deletion of information that:</p><ul><li>Was processed before consent was withdrawn.</li><li>Has become part of the clinic’s official clinical record.</li><li>Must be retained under applicable law or professional standards.</li></ul><p>Your clinician can explain how future sessions will be documented after consent is withdrawn.</p>',
+             fr: '<p>Oui. Vous pouvez retirer à tout moment votre consentement à l’utilisation de Cognitai pour les séances futures en informant votre clinicien.</p><p>Les demandes d’accès, de correction ou de suppression de renseignements sont assujetties aux lois applicables et aux obligations relatives aux dossiers professionnels.</p><p>Le retrait du consentement n’exige pas nécessairement la suppression des renseignements qui :</p><ul><li>Ont été traités avant le retrait du consentement.</li><li>Sont devenus partie intégrante du dossier clinique officiel de la clinique.</li><li>Doivent être conservés en vertu de la loi applicable ou des normes professionnelles.</li></ul><p>Votre clinicien peut vous expliquer comment les séances futures seront documentées après le retrait du consentement.</p>' } },
+
+      { num: 23,
+        q: { en: 'Who should I contact to access or delete my information?',
+             fr: 'Qui dois-je contacter pour accéder à mes renseignements ou les supprimer ?' },
+        a: { en: '<p>You may make a request through:</p><ul><li>Your treating clinician or clinic.</li><li>Cognitai’s Privacy Office through your Cognitai Mobile App.</li></ul><p>When a request directly affects the clinical relationship or clinical record, Cognitai may inform or coordinate with your clinician.</p><p>Requests will be handled in accordance with applicable privacy, healthcare, professional, and record-retention requirements.</p>',
+             fr: '<p>Vous pouvez faire une demande par l’intermédiaire de :</p><ul><li>Votre clinicien traitant ou votre clinique.</li><li>Le bureau de la protection des renseignements personnels de Cognitai, au moyen de votre application mobile Cognitai.</li></ul><p>Lorsqu’une demande touche directement la relation clinique ou le dossier clinique, Cognitai peut en informer votre clinicien ou se coordonner avec lui.</p><p>Les demandes seront traitées conformément aux exigences applicables en matière de confidentialité, de soins de santé, de pratique professionnelle et de conservation des dossiers.</p>' } },
+
+      { num: 24,
+        q: { en: 'How long is information retained?',
+             fr: 'Pendant combien de temps les renseignements sont-ils conservés ?' },
+        a: { en: '<p>Cognitai retains information only for as long as necessary to provide your clinician with clinical intelligence services and meet applicable legal, regulatory, contractual, and professional obligations.</p><p>Because Cognitai is not the official clinical-record system, retention may also depend on decisions made by your clinician and the requirements that apply to the clinician’s practice.</p><p>Your clinician may delete a transcript after the relevant analysis and documentation have been completed, unless retention is otherwise required.</p>',
+             fr: '<p>Cognitai conserve les renseignements uniquement aussi longtemps que nécessaire pour fournir à votre clinicien des services d’intelligence clinique et pour respecter les obligations légales, réglementaires, contractuelles et professionnelles applicables.</p><p>Comme Cognitai n’est pas le système de dossier clinique officiel, la conservation peut également dépendre des décisions prises par votre clinicien et des exigences applicables à sa pratique.</p><p>Votre clinicien peut supprimer une transcription une fois l’analyse et la documentation pertinentes terminées, à moins que la conservation ne soit autrement requise.</p>' } },
+
+      { num: 25,
+        q: { en: 'What happens if I do not consent to Cognitai?',
+             fr: 'Que se passe-t-il si je ne consens pas à Cognitai ?' },
+        a: { en: '<p>Using Cognitai is a mutual decision between you and your clinician.</p><p>You will continue to receive care if you do not consent to Cognitai. Your clinician will use an alternative process to take notes and prepare clinical documentation.</p><p>Cognitai is intended to help provide greater continuity, precision, and personalization, but it is not a condition for receiving mental healthcare.</p>',
+             fr: '<p>L’utilisation de Cognitai est une décision commune entre vous et votre clinicien.</p><p>Vous continuerez de recevoir des soins si vous ne consentez pas à Cognitai. Votre clinicien utilisera un autre processus pour prendre des notes et préparer la documentation clinique.</p><p>Cognitai vise à offrir une plus grande continuité, précision et personnalisation, mais il ne constitue pas une condition pour recevoir des soins de santé mentale.</p>' } },
+
+      { num: 26,
+        q: { en: 'Is Cognitai available for minors?',
+             fr: 'Cognitai est-il offert aux mineurs ?' },
+        a: { en: '<p>Cognitai is currently intended primarily for adults.</p><p>Any use involving a minor must follow the consent, authorization, parental or guardian involvement, privacy, and professional requirements applicable in the relevant jurisdiction.</p><p>The clinician or clinic is responsible for confirming that the necessary authorization has been obtained before using Cognitai with a minor.</p>',
+             fr: '<p>Cognitai est actuellement destiné principalement aux adultes.</p><p>Toute utilisation impliquant un mineur doit respecter les exigences applicables dans la juridiction concernée en matière de consentement, d’autorisation, de participation d’un parent ou d’un tuteur, de confidentialité et de pratique professionnelle.</p><p>Le clinicien ou la clinique est responsable de confirmer que l’autorisation nécessaire a été obtenue avant d’utiliser Cognitai avec un mineur.</p>' } },
+
+      { num: 27,
+        q: { en: 'Is Cognitai an emergency or crisis-monitoring service?',
+             fr: 'Cognitai est-il un service d’urgence ou de surveillance de crise ?' },
+        a: { en: '<p><strong>NO. Cognitai is NOT an emergency service</strong> and does not continuously monitor sessions or client information for immediate crises.</p><p>Do <strong>NOT</strong> use Cognitai to request urgent help. In an emergency, contact emergency services or follow the emergency and crisis instructions provided by your clinician.</p>',
+             fr: '<p><strong>NON. Cognitai n’est PAS un service d’urgence</strong> et ne surveille pas en continu les séances ni les renseignements sur la clientèle pour détecter des crises immédiates.</p><p>N’utilisez <strong>PAS</strong> Cognitai pour demander de l’aide urgente. En cas d’urgence, communiquez avec les services d’urgence ou suivez les consignes d’urgence et de crise fournies par votre clinicien.</p>' } },
+
+      { num: 28,
+        q: { en: 'What happens if there is a privacy or security incident?',
+             fr: 'Que se passe-t-il en cas d’incident de confidentialité ou de sécurité ?' },
+        a: { en: '<p>Cognitai maintains procedures to investigate and respond to suspected privacy or security incidents.</p><p>Affected individuals, clinics, regulators, or other parties will be notified where notification is required by applicable law and according to our privacy policy.</p>',
+             fr: '<p>Cognitai maintient des procédures pour enquêter sur les incidents de confidentialité ou de sécurité présumés et y répondre.</p><p>Les personnes concernées, les cliniques, les organismes de réglementation ou d’autres parties seront avisés lorsque la notification est requise par la loi applicable et conformément à notre politique de confidentialité.</p>' } },
+
+      { num: 29,
+        q: { en: 'Who can answer additional questions?',
+             fr: 'Qui peut répondre à des questions supplémentaires ?' },
+        a: { en: '<p>You may ask your clinician questions before signing the consent form or at any point during your care.</p><div class="contact-card">Questions concerning Cognitai’s privacy and data practices may be directed to:<br><br><strong>Privacy Officer</strong><br>Cognitai Health Inc.<br>1250 Rue Guy, Suite 600<br>Montréal, Quebec H3H 2L3<br>Email: <a href="mailto:trust@cognitai.org">trust@cognitai.org</a></div>',
+             fr: '<p>Vous pouvez poser des questions à votre clinicien avant de signer le formulaire de consentement ou à tout moment pendant vos soins.</p><div class="contact-card">Les questions concernant les pratiques de Cognitai en matière de confidentialité et de données peuvent être adressées à :<br><br><strong>Responsable de la protection des renseignements personnels</strong><br>Cognitai Health Inc.<br>1250, rue Guy, bureau 600<br>Montréal (Québec) H3H 2L3<br>Courriel : <a href="mailto:trust@cognitai.org">trust@cognitai.org</a></div>' } }
+    ];
+
+    // ---- Elements ----
+    var eyebrowEl = document.getElementById('faqEyebrow');
+    var titleEl   = document.getElementById('faqTitle');
+    var leadEl    = document.getElementById('faqLead');
+    var introEl   = document.getElementById('faqIntro');
+    var footerEl  = document.getElementById('faqFooter');
+    var searchEl  = document.getElementById('faqSearch');
+    var countEl   = document.getElementById('faqCount');
+    var faqList   = document.getElementById('faqList');
+    var langBtns  = Array.prototype.slice.call(document.querySelectorAll('.lang-btn'));
+
+    var items = [];
     var suppress = false;
+    var currentLang = 'en';
 
-    // Accordion: only one question open at a time
-    items.forEach(function (d) {
-      d.addEventListener('toggle', function () {
-        if (suppress || !d.open) return;
-        items.forEach(function (o) { if (o !== d) o.open = false; });
+    function fold(s) {
+      return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function renderList(lang) {
+      var html = '';
+      for (var i = 0; i < FAQ.length; i++) {
+        var item = FAQ[i];
+        html += '<details>'
+          + '<summary><span><span class="num">' + item.num + '.</span> ' + item.q[lang] + '</span><span class="sign">+</span></summary>'
+          + '<div class="answer">' + item.a[lang] + '</div>'
+          + '</details>';
+      }
+      faqList.innerHTML = html;
+    }
+
+    function bindItems() {
+      items = Array.prototype.slice.call(faqList.querySelectorAll('details'));
+      items.forEach(function (d) {
+        d.addEventListener('toggle', function () {
+          if (suppress || !d.open) return;
+          items.forEach(function (o) { if (o !== d) o.open = false; });
+        });
       });
-    });
+    }
 
-    search.addEventListener('input', function () {
-      var term = search.value.trim();
-      var q = term.toLowerCase();
+    function runFilter() {
+      var t = UI[currentLang];
+      var term = searchEl.value.trim();
+      var q = fold(term);
       suppress = true;
       if (!q) {
         items.forEach(function (d) { d.hidden = false; d.open = false; });
         suppress = false;
-        count.textContent = '';
-        count.className = 'count';
+        countEl.textContent = '';
+        countEl.className = 'count';
         return;
       }
       var shown = 0;
       items.forEach(function (d) {
-        var match = d.textContent.toLowerCase().indexOf(q) !== -1;
+        var match = fold(d.textContent).indexOf(q) !== -1;
         d.hidden = !match;
         d.open = match;
         if (match) shown++;
       });
       suppress = false;
       if (shown) {
-        count.textContent = 'Showing ' + shown + ' result' + (shown === 1 ? '' : 's') + ' for “' + term + '”.';
-        count.className = 'count';
+        countEl.textContent = t.results(shown, term);
+        countEl.className = 'count';
       } else {
-        count.textContent = 'No results found for “' + term + '”. Try a different keyword.';
-        count.className = 'count warn';
+        countEl.textContent = t.noResults(term);
+        countEl.className = 'count warn';
       }
+    }
+
+    function applyLang(lang) {
+      var t = UI[lang];
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      eyebrowEl.textContent = t.eyebrow;
+      titleEl.textContent   = t.title;
+      leadEl.textContent    = t.lead;
+      introEl.textContent   = t.intro;
+      footerEl.textContent  = t.footer;
+      searchEl.setAttribute('placeholder', t.searchPlaceholder);
+      searchEl.setAttribute('aria-label', t.searchAria);
+      langBtns.forEach(function (b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
+      });
+      renderList(lang);
+      bindItems();
+      runFilter();
+      try { localStorage.setItem('cognitai-faq-lang', lang); } catch (e) {}
+    }
+
+    langBtns.forEach(function (b) {
+      b.addEventListener('click', function () { applyLang(b.getAttribute('data-lang')); });
     });
+    searchEl.addEventListener('input', runFilter);
+
+    var initial = 'en';
+    try {
+      var saved = localStorage.getItem('cognitai-faq-lang');
+      if (saved === 'en' || saved === 'fr') initial = saved;
+    } catch (e) {}
+    applyLang(initial);
   })();
 </script>
 

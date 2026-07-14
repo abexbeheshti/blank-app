@@ -491,12 +491,23 @@
     var items = Array.prototype.slice.call(document.querySelectorAll('.faq details'));
     var search = document.getElementById('faqSearch');
     var count = document.getElementById('faqCount');
+    var suppress = false;
+
+    // Accordion: only one question open at a time
+    items.forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (suppress || !d.open) return;
+        items.forEach(function (o) { if (o !== d) o.open = false; });
+      });
+    });
 
     search.addEventListener('input', function () {
       var term = search.value.trim();
       var q = term.toLowerCase();
+      suppress = true;
       if (!q) {
         items.forEach(function (d) { d.hidden = false; d.open = false; });
+        suppress = false;
         count.textContent = '';
         count.className = 'count';
         return;
@@ -508,6 +519,7 @@
         d.open = match;
         if (match) shown++;
       });
+      suppress = false;
       if (shown) {
         count.textContent = 'Showing ' + shown + ' result' + (shown === 1 ? '' : 's') + ' for “' + term + '”.';
         count.className = 'count';
